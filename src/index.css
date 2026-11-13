@@ -1,0 +1,494 @@
+@import 'tailwindcss';
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Design tokens
+   Tailwind 4 reads these and generates the matching utilities:
+   bg-obsidian, text-rosegold, font-serif, tracking-eyebrow, ease-out-expo…
+   ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Type: an editorial serif for the voice, a clean sans for the small print,
+     a script for the signature. */
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-script: 'Mrs Saint Delafield', 'Cormorant Garamond', cursive;
+
+  /* Night */
+  --color-obsidian: #0f0e13;
+  --color-obsidian-raised: #18151d;
+  /* Dawn */
+  --color-cream: #fdfbf7;
+  --color-champagne: #f5ecdf;
+  --color-ink: #241f25;
+  /* Accents */
+  --color-rosegold: #e2b6b6;
+  --color-rosegold-deep: #c58f8f;
+  --color-crimson: #9c3848;
+  --color-amber: #e6b17e;
+  --color-gold: #d8b36a;
+
+  --tracking-eyebrow: 0.3em;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-pulse-ring: pulse-ring 2.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+  --animate-scroll-line: scroll-line 2.4s var(--ease-in-out-soft) infinite;
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    70%,
+    100% {
+      transform: scale(2.1);
+      opacity: 0;
+    }
+  }
+
+  @keyframes scroll-line {
+    0% {
+      transform: translateY(-101%);
+    }
+    100% {
+      transform: translateY(101%);
+    }
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Base
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* 0 at night, 1 while the letter is on screen. Written by the scroll
+     choreography; the canvas background follows the same number. */
+  --dawn: 0;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    background-color: color-mix(in srgb, var(--color-champagne) calc(var(--dawn) * 100%), var(--color-obsidian));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(226 182 182 / 0.35) transparent;
+  }
+
+  body {
+    min-height: 100svh;
+    overflow-x: clip;
+    color: var(--color-cream);
+    font-weight: 400;
+  }
+
+  /* The page holds still until the gate has been opened. */
+  html.is-locked {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: rgb(226 182 182 / 0.85);
+    color: var(--color-obsidian);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--color-rosegold);
+    outline-offset: 5px;
+    border-radius: 4px;
+  }
+
+  /* With the custom cursor active, the system pointer steps aside. */
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Components
+   ─────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  /* Small-caps labels: chapter markers, dates, buttons. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  /* Text that sits directly on the page and must survive night and dawn. */
+  .text-adaptive {
+    color: color-mix(in srgb, var(--color-crimson) calc(var(--dawn) * 100%), var(--color-rosegold));
+  }
+
+  /* ── Word-by-word reveals ──────────────────────────────────────────────── */
+  .word-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    /* Room for descenders and italic overhang, without shifting the layout. */
+    padding: 0.1em 0.07em 0.18em;
+    margin: -0.1em -0.07em -0.18em;
+  }
+
+  .word {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  .word-em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-rosegold);
+  }
+
+  /* ── Frosted glass ─────────────────────────────────────────────────────── */
+  .glass-card {
+    /* Smoky rather than milky, and denser at dawn, so captions stay legible
+       whatever is behind the card. */
+    background:
+      linear-gradient(140deg, rgb(253 251 247 / 0.1), rgb(253 251 247 / 0.02) 42%, rgb(230 177 126 / 0.08)),
+      rgb(22 19 27 / calc(0.5 + var(--dawn) * 0.38));
+    border: 1px solid rgb(253 251 247 / 0.13);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      0 40px 80px -40px rgb(0 0 0 / 0.65);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    backdrop-filter: blur(22px) saturate(150%);
+  }
+
+  .memory-placeholder {
+    background:
+      radial-gradient(80% 70% at 30% 20%, rgb(226 182 182 / 0.35), transparent 70%),
+      radial-gradient(70% 70% at 80% 90%, rgb(230 177 126 / 0.28), transparent 70%), var(--color-obsidian-raised);
+  }
+
+  .open-pill,
+  .sound-pill {
+    border: 1px solid rgb(253 251 247 / 0.16);
+    background: rgb(22 19 27 / calc(0.42 + var(--dawn) * 0.4));
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
+    transition:
+      border-color 0.6s var(--ease-out-expo),
+      background-color 0.6s var(--ease-out-expo);
+  }
+
+  .open-pill:hover,
+  .sound-pill:hover {
+    border-color: rgb(226 182 182 / 0.6);
+    background: rgb(40 32 42 / calc(0.55 + var(--dawn) * 0.3));
+  }
+
+  /* ── The finale button ─────────────────────────────────────────────────── */
+  .hug-button {
+    background: linear-gradient(135deg, #f1d0c8, var(--color-rosegold) 45%, #d9a98f);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.55),
+      0 0 0 1px rgb(226 182 182 / 0.25),
+      0 18px 50px -12px rgb(226 182 182 / 0.55);
+    transition: box-shadow 0.6s var(--ease-out-expo);
+  }
+
+  .hug-button:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.6),
+      0 0 0 6px rgb(226 182 182 / 0.14),
+      0 24px 70px -10px rgb(226 182 182 / 0.75);
+  }
+
+  /* ── The letter ────────────────────────────────────────────────────────── */
+  .parchment {
+    position: relative;
+    border-radius: 6px;
+    color: var(--color-ink);
+    background-color: var(--color-cream);
+    background-image:
+      radial-gradient(120% 60% at 50% 0%, rgb(255 255 255 / 0.9), transparent 62%),
+      linear-gradient(180deg, transparent 55%, rgb(245 236 223 / 0.75) 100%), var(--paper-grain);
+    box-shadow:
+      0 0 0 1px rgb(156 56 72 / 0.07),
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      0 2px 5px rgb(60 30 30 / 0.07),
+      0 30px 60px -22px rgb(60 30 30 / 0.24),
+      0 90px 150px -60px rgb(60 30 30 / 0.4);
+  }
+
+  /* A fine printed rule set in from the paper's edge. */
+  .parchment::before {
+    content: '';
+    position: absolute;
+    inset: 11px;
+    border: 1px solid rgb(156 56 72 / 0.16);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+
+  .letter-paragraph {
+    font-family: var(--font-serif);
+    font-size: 1.3125rem;
+    font-weight: 500;
+    line-height: 1.72;
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 768px) {
+    .letter-paragraph {
+      font-size: 1.4375rem;
+    }
+  }
+
+  .drop-cap {
+    float: left;
+    margin: 0.06em 0.12em 0 -0.04em;
+    font-family: var(--font-serif);
+    font-size: 4.9em;
+    font-weight: 400;
+    line-height: 0.74;
+    color: var(--color-crimson);
+    transform-origin: 20% 80%;
+  }
+
+  .signature {
+    display: inline-block;
+    padding: 0 0.35em 0.1em 0.05em;
+    transform: rotate(-2.5deg);
+    transform-origin: left center;
+  }
+
+  /* ── Sound toggle ──────────────────────────────────────────────────────── */
+  .equalizer {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 18px;
+    padding: 0 3px;
+    color: var(--color-rosegold);
+  }
+
+  .equalizer > span {
+    width: 2px;
+    height: 100%;
+    border-radius: 2px;
+    background: currentColor;
+    transform: scaleY(0.2);
+    transition: transform 0.7s var(--ease-out-expo);
+  }
+
+  .equalizer.is-playing > span {
+    animation: equalize calc(0.95s + var(--bar) * 0.11s) ease-in-out infinite;
+    animation-delay: calc(var(--bar) * -0.27s);
+  }
+
+  /* ── Custom cursor ─────────────────────────────────────────────────────── */
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-badge,
+  .cursor-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    will-change: transform;
+  }
+
+  .cursor-dot {
+    width: 7px;
+    height: 7px;
+    background: #fff;
+    transition:
+      opacity 0.3s ease,
+      scale 0.4s var(--ease-out-expo);
+  }
+
+  .cursor-ring {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgb(255 255 255 / 0.75);
+    transition:
+      width 0.5s var(--ease-out-expo),
+      height 0.5s var(--ease-out-expo),
+      opacity 0.3s ease,
+      background-color 0.4s ease,
+      scale 0.4s var(--ease-out-expo);
+  }
+
+  .cursor-ring.is-hover {
+    width: 76px;
+    height: 76px;
+    background-color: rgb(255 255 255 / 0.14);
+  }
+
+  .cursor-ring.is-pressed {
+    scale: 0.82;
+  }
+
+  .cursor-dot.is-hidden,
+  .cursor-ring.is-hidden {
+    opacity: 0;
+    scale: 0.4;
+  }
+
+  .cursor-badge {
+    display: grid;
+    place-items: center;
+    width: 88px;
+    height: 88px;
+    background: var(--color-rosegold);
+    color: var(--color-obsidian);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-indent: 0.26em;
+    text-transform: uppercase;
+    opacity: 0;
+    scale: 0.3;
+    transition:
+      opacity 0.35s ease,
+      scale 0.55s var(--ease-out-expo);
+  }
+
+  .cursor-badge.is-visible {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .cursor-badge.is-visible.is-pressed {
+    scale: 0.88;
+  }
+
+  /* The soft light that trails behind the pointer. It dims at dawn, where a
+     glow on cream paper would only look like a smudge. */
+  .cursor-glow {
+    width: 34rem;
+    height: 34rem;
+    background: radial-gradient(circle, rgb(226 182 182 / 0.13), rgb(230 177 126 / 0.05) 42%, transparent 68%);
+    mix-blend-mode: screen;
+    opacity: calc(1 - var(--dawn));
+  }
+
+  /* ── Atmosphere ────────────────────────────────────────────────────────── */
+  /* Darkened corners for the night chapters; lifted away at dawn. */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(125% 95% at 50% 42%, transparent 52%, rgb(6 5 9 / 0.62) 100%);
+    opacity: calc(1 - var(--dawn));
+  }
+
+  /* The bloom of light that carries her through the gate. */
+  .veil {
+    position: fixed;
+    inset: -20%;
+    z-index: 45;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      circle at 50% 41%,
+      rgb(255 246 236) 0%,
+      rgb(249 226 212 / 0.92) 16%,
+      rgb(226 182 182 / 0.62) 36%,
+      rgb(197 143 143 / 0.22) 55%,
+      transparent 72%
+    );
+    mix-blend-mode: screen;
+    will-change: transform, opacity;
+  }
+
+  .film-grain {
+    position: absolute;
+    inset: -100%;
+    background-image: var(--film-grain);
+    background-size: 240px 240px;
+    opacity: 0.075;
+    animation: grain 0.9s steps(1) infinite;
+    will-change: transform;
+  }
+
+  /* Shown instead of the 3D scene if WebGL is unavailable. */
+  .canvas-fallback {
+    background:
+      radial-gradient(42% 36% at 50% 40%, rgb(226 182 182 / 0.3), transparent 70%),
+      radial-gradient(60% 50% at 70% 70%, rgb(230 177 126 / 0.1), transparent 70%), var(--color-obsidian);
+  }
+}
+
+/* Procedural textures, generated in SVG so there are no image files to load. */
+:root {
+  --film-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0.26  0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+
+@keyframes equalize {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  25% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.45);
+  }
+  75% {
+    transform: scaleY(0.8);
+  }
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  12% {
+    transform: translate(-6%, 4%);
+  }
+  25% {
+    transform: translate(5%, -7%);
+  }
+  37% {
+    transform: translate(-8%, -3%);
+  }
+  50% {
+    transform: translate(7%, 6%);
+  }
+  62% {
+    transform: translate(-4%, 8%);
+  }
+  75% {
+    transform: translate(8%, -5%);
+  }
+  87% {
+    transform: translate(-7%, 2%);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Reduced motion: keep the atmosphere, drop the movement.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .film-grain,
+  .equalizer.is-playing > span {
+    animation: none;
+  }
+
+  .equalizer.is-playing > span {
+    transform: scaleY(0.7);
+  }
+
+  .animate-pulse-ring,
+  .animate-scroll-line {
+    animation: none;
+  }
+}
