@@ -31,7 +31,7 @@ function Paragraph({ text, dropCap = false }: { text: string; dropCap?: boolean 
 export function LetterSection() {
   const root = useRef<HTMLElement>(null)
   const reduced = usePrefersReducedMotion()
-  const { letter, herName, yourName } = letterConfig
+  const { letter, yourName } = letterConfig
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -122,7 +122,7 @@ export function LetterSection() {
         </header>
 
         <h2 className="letter-fade mt-12 font-serif text-[2.1rem] font-normal italic leading-tight text-crimson md:mt-16 md:text-[2.75rem]">
-          {letter.salutation} {herName},
+          {letter.salutation}
         </h2>
 
         <div className="mt-8 space-y-7 md:mt-10 md:space-y-8">

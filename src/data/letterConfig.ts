@@ -70,7 +70,7 @@ export interface LetterConfig {
   letter: {
     label: string
     dateline: string
-    /** The greeting. Her name is added after it: "My dearest Name," */
+    /** The complete greeting, including its punctuation. */
     salutation: string
     /** One string per paragraph. Write as many as you like. */
     paragraphs: string[]
@@ -174,16 +174,16 @@ export const letterConfig: LetterConfig = {
   letter: {
     label: 'The Letter',
     dateline: 'Written on a quiet evening, thinking of you',
-    salutation: 'My dearest',
+    salutation: 'Hey love,',
     paragraphs: [
-      'There are a hundred ways I could begin this, and I have tried most of them. The truth is simpler than any opening line I could dress up: my life is better, softer and far more interesting with you in it.',
-      'I love the obvious things. Your laugh. The way your eyes give you away before you say a word. But I love the quiet things more: how you hum when you think no one is listening, how you remember the small details I mention once and forget, the particular calm that settles over a room simply because you are in it.',
-      'You have made ordinary days feel like something worth keeping. A walk to nowhere, a shared meal, a long drive with the windows down. With you they stop being errands and start becoming memories. I catch myself in the middle of them thinking, remember this.',
-      'I do not always find the right words when it matters, so I am leaving them here, where they cannot get lost. Thank you for your patience on my difficult days, for your courage on your own, and for choosing me, again and again, in all the small ways that no one else sees.',
-      'Whatever comes next, I want to meet it beside you. Not because it will always be easy, but because there is no one I would rather figure it out with. You are my favorite hello, my hardest goodbye, and the best part of every day in between.',
+      'I wanted to make something special for you because a normal text message didn’t feel like enough to say what’s been on my mind lately. Looking back at these past few months, I know I haven’t always shown up for you the way you deserve. I’ve been so caught up and occupied with everything going on in my head and my day-to-day routine, and when I’m not busy, I know I’ve slipped into being lazy and low-energy. And for that, I am truly sorry.',
+      'I never want my quiet moments, my exhaustion, or my lack of initiative lately to make you question how much you mean to me. The truth is, my laziness has nothing to do with how much I value you—if anything, it comes from the fact that you are the one person in this world I feel completely safe with. With everyone else, I feel like I have to keep my guard up, stay sharp, and put on a front. With you, all that pressure disappears. You aren’t just my girlfriend; you are my best friend and my only real safe space.',
+      'Because I’m so comfortable around you, I let my guard down completely—and sometimes, I accidentally let my effort slip too, assuming you already know what’s in my heart. You are the only person I can truly be myself around when my battery is at zero, and while I’m so grateful that your presence feels like home to me, I also realize it’s not fair for you to only get the tired, unmotivated version of me.',
+      'Please know that through every busy week and every quiet, lazy day, my love and appreciation for you have never faded for a second. I notice the patience you have with me. I notice how you stay by my side even when I’m drained or distracted. Loving you is the easiest and best part of my life, and I never want you to feel taken for granted just because I’ve gotten too comfortable in the peace you give me.',
+      'I’m going to do better at being present, putting in the effort you deserve, and showing you how much I adore you—not just in my head, but in my actions. Thank you for being my peace, my best friend, and my favorite person.',
     ],
-    closing: 'Forever and always yours,',
-    postscript: 'P.S. Keep scrolling. I left one more thing for you.',
+    closing: 'I love you, always.',
+    postscript: '',
   },
 
   music: {
