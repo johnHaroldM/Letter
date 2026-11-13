@@ -12,6 +12,7 @@ import { MusicToggle } from '@/components/MusicToggle'
 import { SmoothScroll } from '@/components/SmoothScroll'
 import { letterConfig } from '@/data/letterConfig'
 import { useAmbientAudio } from '@/hooks/useAmbientAudio'
+import { useInteractionSounds } from '@/hooks/useInteractionSounds'
 import { usePrefersReducedMotion } from '@/hooks/useMediaQuery'
 import { usePointerParallax, useSceneChoreography } from '@/hooks/useSceneChoreography'
 import { experience, type Phase } from '@/lib/experience'
@@ -30,6 +31,7 @@ export default function App() {
   const reduced = usePrefersReducedMotion()
   const { playing, play, toggle } = useAmbientAudio(letterConfig.music.src)
 
+  useInteractionSounds()
   useSceneChoreography()
   usePointerParallax()
 
